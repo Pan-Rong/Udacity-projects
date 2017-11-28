@@ -17,4 +17,3 @@
 		16.实现暂停按钮，点击暂停按钮更换图片;
 		17.实现暂停按钮，计时暂停，再次启动计时时，累计计时;
 		18.实现暂停时,点击图片提示暂停提示，需点击开始按钮;
-![baidu logo](file:///G:/GitHub/UdacityProjects/myProject1/images/apple.jpg)
