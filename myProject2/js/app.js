@@ -120,6 +120,7 @@ Player.prototype.handleInput = function(movement) {
             this.x = init.player.position.x;
             this.y = init.player.position.y;
             alert(`You Win!Your score is ${this.score}  `);
+            this.score = 100;
         }
     }else if (movement == "down") {
         if(this.y < init.player.movementAreaLimit.bottom) {
