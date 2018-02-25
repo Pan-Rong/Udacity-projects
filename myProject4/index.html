@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <title>高德地图</title>
+    <!-- 导入地图样式 -->
+    <link rel="stylesheet" href="http://cache.amap.com/lbs/static/main1119.css"/>
+
+    <link rel="stylesheet" href="dist/style.css">
+    <style>
+    
+    </style>
+</head>
+<body>
+    <!-- 布局界面 -->
+	<div class="container">
+        <div data-bind="with: currentList">  
+        <div data-bind="css: {listHeader: true},style: {left: searchListHidden() ? '200px':'0px'}">
+            <a href="#" data-bind="click: $parent.toggleMenu,foreach: iconListCss">
+                <i data-bind="css: $data"></i>
+            </a>
+            <h1 data-bind="css: {headerTitle: true}">高德地图</h1>
+        </div>
+        <div data-bind="css: {searchList: true},style: {display: searchListHidden() ? 'block':'none'}">
+            <h2 data-bind="css: {locationTitle: true},text: location"></h2>
+            <input type="text" data-bind="css: {inputStyle: true}" placeholder="测试位置">
+            <div data-bind="css: {filterStyle: true}">Filter</div> 
+            <!--显示坐标title-->
+            <div data-bind="foreach: showLocationList">
+                <li data-bind="css: {locationList: true},text: $data.title"></li>        
+            </div>   
+        </div>
+        </div> 
+        <div id="map"></div>     
+
+    </div>
+
+<!-- 异步加载 JavaScript API-->
+<script src="http://webapi.amap.com/maps?v=1.4.4&key=fa2d995e01be8d336551f43bc20ec87a&callback=init"></script>
+<script src="src/libs/jQuerylib/jquery-3.2.1.min.js"></script>
+<script src="src/libs/knockout-3.4.2.js"></script>
+<script src="dist/app.js"></script>
+<script>
+    var tempNemMakers = [];//用于存放标记，以便比较是否需要隐藏；
+    var map;
+     // 创建默认标记样式和高亮标记样式
+    var defaultIcon = 'http://webapi.amap.com/theme/v1.3/markers/n/mark_b.png';
+	var highlightedIcon = 'http://webapi.amap.com/theme/v1.3/markers/n/mark_r.png';
+
+	function init(){
+        // 创建地图对象，默认显示位置
+        map = new AMap.Map('map', {
+            center: [116.397428, 39.90923],
+            zoom: 11
+        });
+
+        map.plugin(["AMap.ToolBar"], function() {
+            // 添加 工具条
+            map.addControl(new AMap.ToolBar());
+        });
+        // 创建 默认信息窗体
+        var infoWindow = new AMap.InfoWindow({offset: new AMap.Pixel(0, -30)});
+    
+        // 为地图添加标记
+        var tempCoordinates = listContentThis.showLocationList();
+        tempCoordinates.forEach(function(coordinate){
+            var newMarker = new AMap.Marker({
+                icon: defaultIcon,
+        	    position: coordinate.position,
+        	    map: map,
+                title: coordinate.title,
+                offset: new AMap.Pixel(-12,-36)
+            }); 
+            newMarker.content = '地址：' + coordinate.address + '\n 了解Wiki百科查询信息，请点击Marker';
+
+           // 设置鼠标移入和移出标记的图标状态, 并显示景点地址信息；
+           newMarker.on('mouseover', function(event) {
+                this.setIcon(highlightedIcon);
+                infoWindow.setContent(event.target.content);
+        	    infoWindow.open(map, event.target.getPosition());
+        	});
+            newMarker.on('mouseout', function() {
+                this.setIcon(defaultIcon);
+            });
+           // 为标记绑定 点击事件 插入第三方API 显示景点在Wikis上的信息
+            var tempName = coordinate.englishName;
+            newMarker.on('click', function(){
+                window.open('https://en.wikipedia.org/wiki/'+ tempName,'_blank');
+            });
+            newMarker.setAnimation('AMAP_ANIMATION_DROP');
+            tempNemMakers.push(newMarker);
+        });
+        console.log(tempNemMakers);
+       
+    }
+    //显示筛选的景点marker信息
+    function showMarkers(tempLocation) {
+        for(var i = 0;i < tempNemMakers.length;i++ ) {
+            tempNemMakers[i].setMap(null);
+            for(var j = 0;j< tempLocation.length;j++ ){
+                if(tempNemMakers[i].Vh.title == tempLocation[j].title){
+                    tempNemMakers[i].setMap(map);
+                }
+            } 
+        }
+        map.setFitView();
+    }
+    
+    //绑定输入框的实时监听事件，筛选与输入内容相符合的地址信息同时更新地址marker
+    $(function(){
+        $('input[type="text"]').bind("input",function(event){
+            $("li").css({color: "white"});
+            var tempSite = this.value;
+            if(tempSite) {
+                var temp = [];
+                for(var coordinate of coordinates){
+                    if(coordinate.title.match(tempSite)){
+                        temp.push(coordinate);
+                    }
+                }
+                /*var temp = coordinates.map(function(value) {
+                    if(value.title.match(tempSite)) {
+                        return value;
+                    }
+                });*/
+                listContentThis.showLocationList(temp);
+            }else {
+                listContentThis.showLocationList(coordinates);
+            }
+            showMarkers(listContentThis.showLocationList());
+        });
+        //绑定列表点击事件，实现点击时，marker随之变化
+        $(document).delegate("li","click",function(event){//动态绑定li的点击事件
+            $("li").css({color: "white"});
+            var tempContent = [{title:event.target.innerHTML}];
+            showMarkers(tempContent);
+            $(event.target).css({color: "red"});
+        });
+    });
+</script>
+
+</body>
+</html>
