@@ -1,12 +1,10 @@
 import React,{Component} from 'react'
-//import * as BooksAPI from './BooksAPI'//导入BooksAPI模块
 import Books from './Books' //导入新建的book组件
-import './App.css'
 
 class Bookshelfs extends Component{
 
     render(){
-        const { bookshelfs } = this.props
+        const { bookshelfs,chooseShelf } = this.props
         var currentRB = [];  //存储正在读的书
         var wantTRB = [];   //存储想要读的书
         var readB = [];    //存储已经读完的书
@@ -24,19 +22,19 @@ class Bookshelfs extends Component{
                <div className="bookshelf" >
                 <h2 className="bookshelf-title">Current Reading</h2>
                 <div className="bookshelf-books">
-                    <Books shelf={currentRB}/> 
+                    <Books shelf={currentRB} selectedShelf={chooseShelf}/> 
                 </div>
               </div>
               <div className="bookshelf" >
                 <h2 className="bookshelf-title">Want To Read</h2>
                 <div className="bookshelf-books">
-                    <Books shelf={wantTRB}/>  
+                    <Books shelf={wantTRB} selectedShelf={chooseShelf}/>  
                 </div>
               </div>
               <div className="bookshelf" >
                 <h2 className="bookshelf-title">Read</h2>
                 <div className="bookshelf-books">
-                    <Books shelf={readB}/> 
+                    <Books shelf={readB} selectedShelf={chooseShelf}/> 
                 </div>
               </div> 
             </div>
