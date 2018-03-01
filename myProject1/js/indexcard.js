@@ -99,7 +99,7 @@ function showStars(obj,scoreNum){
 	//var imgChange=imgChange.getElementsByTagId("img");
 	for(var i=0;i<(Math.floor(scoreNum/2));i++){
 		(function(i){
-			imgChange[i].src="images/cards/starb.png";
+			imgChange[i].src="images/starb.png";
 		})(i);
 	}
 	if(Math.floor(scoreNum/2)==4){
@@ -134,7 +134,7 @@ function resethandle(obj){
 		var sfnod1=fnod.getElementsByClassName("score");
 		for(var i=0;i<sfnod1.length;i++){
 			(function(i){
-				sfnod1[i].src="images/cards/starw.jpg";
+				sfnod1[i].src="images/starw.jpg";
 			})(i);
 		}
 //-----------实现刷新时，显示暂停按钮的图片------------------
@@ -170,7 +170,7 @@ function resethandle(obj){
 			//imgIdNum指li里的id名称，用于储存图片放置的id地址
 			 	var imgIdNum ="imgid"+i;
 				var imgName=fruitsName[randomNum];//得到随机图片地址
-				var text ='<img src="images/cards/'+imgName+'.jpg" >';
+				var text ='<img src="images/'+imgName+'.jpg" />';
 				//console.log(imgName);
 				document.getElementById(imgIdNum).innerHTML=text;
 				
@@ -191,6 +191,7 @@ var flg=0;//用于标记是否点击的是同一图片;
 var imgMatchArray=new Array();//16个零;用来实现已匹配的图片不能再次点击计算，，已匹配的设置为1，未匹配的为0;
 var stepNum=0;//记录步数
 var scoreNum=0;//记录分数,2对匹配得一颗星，
+var clearflg2 = 0 ;
 //实现步数的显示即清空
 function step(stepNum){
 	document.getElementById("stepnum").innerHTML=stepNum; 	
@@ -208,9 +209,10 @@ function onclickhandle(obj){
 	if((!imgMatchArray[idIntNum])&&(fnameArray[idIntNum]!==undefined)&&(!timetag)&&(timetag1!==2)){
 		var divlist=obj.getElementsByTagName("div");
 		divlist[0].style.display="block";
-			mouseclickNum+=1;
+		mouseclickNum+=1;
 			//console.log(mouseclickNum);
-  			flg+=idIntNum;
+		flg+=idIntNum;
+
 			//判断是否选择了2张图片
  		if(mouseclickNum%2==0){
 			//显示步数，同时显示不同的两张图片时(一张图片点击两次不算)，算一步;
@@ -225,21 +227,23 @@ function onclickhandle(obj){
 				flg=idIntNum;
 				mouseclickNum=1;
 			}else{
+				clearTimeout(clearflg2);
 				if(compArray[0]==compArray[1]){
-					alert("good job!");
 					scoreNum++;
-					
 					//用来实现已匹配的图片不能再次点击计算，已匹配的设置为1，未匹配的为0；
 					imgMatchArray[idIntNum]=1;
 					imgMatchArray[flg-idIntNum]=1;
 					showStars(obj,scoreNum);//显示星星等级;
+					flg=0;//清除标签;
 				}else{
-					alert("图片不匹配");
-					list[flg-idIntNum].firstChild.style.display="none";
-					list[idIntNum].firstChild.style.display="none";
-					//实现当两个图片不匹配时，隐藏图片;					
+					clearflg2 = setTimeout(function(){
+						list[flg-idIntNum].firstChild.style.display="none";
+						list[idIntNum].firstChild.style.display="none";
+						//实现当两个图片不匹配时，隐藏图片;		
+						flg=0;//清除标签;
+					},200);
+								
 				}
-				flg=0;//清除标签;
 			}
 		 }else{
 	 		compArray[0]=fnameArray[idIntNum];

@@ -94,20 +94,20 @@
 		margin:auto;
 	}
 	#frm #numbdiv .numb #playbutton{
-		background:url(../images/cards/start.jpg);/**/
+		background:url(../images/start.jpg);/**/
 		width:20px;
 		height:20px;
 		float:right;
 		display:none;/**/
 	}
 	#frm #numbdiv .numb #pausebutton{
-		background:url(../images/cards/pause.jpg);/*用于切换*/
+		background:url(../images/pause.jpg);/*用于切换*/
 		width:20px;
 		height:20px;
 		float:right;
 	}
 	#frm #numbdiv .numb input[type="reset"]{
-		background:url(../images/cards/reset1.jpg);
+		background:url(../images/reset1.jpg);
 		width:20px;
 		height:20px;
 		margin:auto 10px;
