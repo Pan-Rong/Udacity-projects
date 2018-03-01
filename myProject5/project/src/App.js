@@ -1,9 +1,7 @@
 import React from 'react'
 import { Route } from 'react-router-dom'
-import { Link } from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
 import Bookshelfs from './Bookshelfs'
-import Books from './Books' //导入新建的book组件
 import Search from './Search'
 
 import './App.css'
@@ -11,7 +9,6 @@ import './App.css'
 class BooksApp extends React.Component {
   state = {
     bookshelfs: []
-   
   }
   //从后台爬取数据
   componentDidMount() {
@@ -30,8 +27,6 @@ class BooksApp extends React.Component {
     })
   }
 
-  
-
   render(){
     var that = this
     return (
@@ -41,20 +36,7 @@ class BooksApp extends React.Component {
             )}
           />
           <Route exact path = "/" render =  {() =>(
-            <div className="list-books">
-              <div className="list-books-title">
-                <h1>MyReads</h1>
-              </div>
-              <div className="list-books-content">
-
-                {console.log(that.state.bookshelfs)}
-                <Bookshelfs bookshelfs = {that.state.bookshelfs} chooseShelf= {that.selectedShelf.bind(that)}/> 
- 
-              </div>
-              <div className="open-search">
-                <Link to ="/search" >Add a book</Link>
-              </div>
-            </div>
+            <Bookshelfs bookshelfs = {that.state.bookshelfs} chooseShelf= {that.selectedShelf.bind(that)}/> 
           )}
           />
       </div>

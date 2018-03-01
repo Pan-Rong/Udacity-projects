@@ -104,7 +104,7 @@ function showStars(obj,scoreNum){
 	}
 	if(Math.floor(scoreNum/2)==4){
 		stoptime();//clearTimeout(gameovertime);
-		alert("Congratulation!You won!"+"\n"+"With "+stepNum+"Moves"+" and "+Math.floor(scoreNum/2)+" Stars."+"\n");	
+		alert("Congratulation!You won!"+"\n"+"With "+savetime+" s and "+stepNum+" Moves"+" and "+Math.floor(scoreNum/2)+" Stars."+"\n");	
 	}
 }
 var fnameArray=new Array();//用于存放随机布局后的图片分布信息
@@ -237,7 +237,7 @@ function onclickhandle(obj){
 					alert("图片不匹配");
 					list[flg-idIntNum].firstChild.style.display="none";
 					list[idIntNum].firstChild.style.display="none";
-							//实现当两个图片不匹配时，隐藏图片;					
+					//实现当两个图片不匹配时，隐藏图片;					
 				}
 				flg=0;//清除标签;
 			}
