@@ -90,21 +90,37 @@ function checkTime(i){
 			return '00';
 	}
 }
-//显示等级函数
-function showStars(obj,scoreNum){
+//显示等级函数12步(同时点开两张算一步)以内匹配，得3颗星
+//16步以内全部匹配得2颗星
+//20步以内全部匹配得1颗星
+//20步以外，没有星
+function showStars(obj,scoreNum,stepNum){
 	var imgChange=obj.parentNode;
 		imgChange=imgChange.parentNode;
 		imgChange=imgChange.parentNode;//找到frm的id;
 		imgChange=imgChange.getElementsByClassName("score");
-	//var imgChange=imgChange.getElementsByTagId("img");
-	for(var i=0;i<(Math.floor(scoreNum/2));i++){
-		(function(i){
-			imgChange[i].src="images/starb.png";
-		})(i);
+	var tempStarNum = 0;	
+	if(stepNum > 20){
+		imgChange[0].src="images/starw.jpg";
+		imgChange[1].src="images/starw.jpg";
+		imgChange[2].src="images/starw.jpg";
+		tempStarNum = 0;
+	}else if(stepNum > 16){
+		imgChange[1].src="images/starw.jpg";
+		imgChange[2].src="images/starw.jpg";
+		tempStarNum = 1;
+	}else if(stepNum > 12){
+		imgChange[2].src="images/starw.jpg";
+		tempStarNum = 2;
+	}else {
+		tempStarNum = 3;
 	}
 	if(Math.floor(scoreNum/2)==4){
 		stoptime();//clearTimeout(gameovertime);
-		alert("Congratulation!You won!"+"\n"+"With "+savetime+" s and "+stepNum+" Moves"+" and "+Math.floor(scoreNum/2)+" Stars."+"\n");	
+		if(confirm("Congratulation!You won!"+"\n"+"With "+savetime+" s and "+stepNum+" Moves"+" and "+tempStarNum+" Stars."+"\n")){
+			var tempObj = document.getElementById("resetbutton"); 
+			resethandle(tempObj);
+		}
 	}
 }
 var fnameArray=new Array();//用于存放随机布局后的图片分布信息
@@ -134,7 +150,7 @@ function resethandle(obj){
 		var sfnod1=fnod.getElementsByClassName("score");
 		for(var i=0;i<sfnod1.length;i++){
 			(function(i){
-				sfnod1[i].src="images/starw.jpg";
+				sfnod1[i].src="images/starb.png";
 			})(i);
 		}
 //-----------实现刷新时，显示暂停按钮的图片------------------
@@ -215,25 +231,25 @@ function onclickhandle(obj){
 
 			//判断是否选择了2张图片
  		if(mouseclickNum%2==0){
-			//显示步数，同时显示不同的两张图片时(一张图片点击两次不算)，算一步;
-			stepNum++;	
-			step(stepNum);//显示步数
-			compArray[1]=fnameArray[idIntNum];
+
 		//判断是否两次点击的是同一图片,若是，提示操作有误需要重新选一张图片
 			if((flg-idIntNum)==idIntNum)
 			{
-				//alert("操作有误！请再选择一张图片")
+			//alert("操作有误！请再选择一张图片")
 			//算第一次操作，
 				flg=idIntNum;
 				mouseclickNum=1;
 			}else{
+				//显示步数，同时显示不同的两张图片时(一张图片点击两次不算)，算一步;
+				stepNum++;	
+				step(stepNum);//显示步数
+				compArray[1]=fnameArray[idIntNum];
 				clearTimeout(clearflg2);
 				if(compArray[0]==compArray[1]){
 					scoreNum++;
 					//用来实现已匹配的图片不能再次点击计算，已匹配的设置为1，未匹配的为0；
 					imgMatchArray[idIntNum]=1;
 					imgMatchArray[flg-idIntNum]=1;
-					showStars(obj,scoreNum);//显示星星等级;
 					flg=0;//清除标签;
 				}else{
 					clearflg2 = setTimeout(function(){
@@ -244,7 +260,8 @@ function onclickhandle(obj){
 					},200);
 								
 				}
-			}
+				showStars(obj,scoreNum,stepNum);//显示星星等级;
+			}			
 		 }else{
 	 		compArray[0]=fnameArray[idIntNum];
 			console.log(compArray[0]);
