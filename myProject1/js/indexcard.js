@@ -19,8 +19,15 @@
 				18.实现暂停时,点击图片提示暂停提示，需点击开始按钮;
 ***************************************************************************/
 //暂停函数，暂停时，计数停止，图标变化，点击图片显示暂停中
-var pauseflg=0;//记录是否暂停,暂停为0;播放为1;
-var pauseNum=0;//记录暂停的次数;
+let pauseflg=0;//记录是否暂停,暂停为0;播放为1;
+let pauseNum=0;//记录暂停的次数;
+let pausetime=0;//用来保存暂停时的时间
+let timetag=0;//记录是否超时,若超时设置为1;
+let timetag1=0;//记录是否是重置，若是标志设为1；只在时间函数中使用;
+let timestartcount=0;//记录第一次点击时的时间，用于比较
+let gameovertime=0;//用于在规定时间内完成任务时，暂停计时;
+let savetime=0;//用来存储转换后的时间,以便暂停后实现保存	
+//暂停时间函数
 function pausehandle(obj){
 	pauseNum++;
 	//修改该输入按钮的背景图片;
@@ -40,15 +47,11 @@ function pausehandle(obj){
 		pausetime=savetime-0;//保存暂停的值，实现再起开播时累计计时
 	}
 }
+//游戏结束后停止计数函数
 function stoptime(){
 	clearTimeout(gameovertime);//重置
 }
-var pausetime=0;//用来保存暂停时的时间
-var timetag=0;//记录是否超时,若超时设置为1;
-var timetag1=0;//记录是否是重置，若是标志设为1；只在时间函数中使用;
-var timestartcount=0;//记录第一次点击时的时间，用于比较
-var gameovertime=0;//用于在规定时间内完成任务时，暂停计时;
-var savetime=0;//用来存储转换后的时间,以便暂停后实现保存		
+//显示时间函数	
 function showTime(){
 	
 	var startTime=new Date();
@@ -58,10 +61,12 @@ function showTime(){
 	displayTime(savetime);//document.getElementById("starttime").innerHTML=savetime+'s';
 	gameovertime=setTimeout("showTime()",200);//为了方便后边暂停计时
 	}
-}	
+}
+//将时间显示到页面上	
 function displayTime(savetime1){
 	document.getElementById("starttime").innerHTML=savetime1+'s';
 }
+//实现暂停函数的计算
 function checkTime(i){
 	var timecount=0;
 	if(timetag1===1){//用于记录第一次的时间，以便获得时间差,非第一次时为1，第一次为0
@@ -91,21 +96,15 @@ function checkTime(i){
 	}
 }
 //显示等级函数12步(同时点开两张算一步)以内匹配，得3颗星
-//16步以内全部匹配得2颗星
-//20步以内全部匹配得1颗星
-//20步以外，没有星
+//18步以内全部匹配得2颗星
+//18步上内全部匹配得1颗星
 function showStars(obj,scoreNum,stepNum){
 	var imgChange=obj.parentNode;
 		imgChange=imgChange.parentNode;
 		imgChange=imgChange.parentNode;//找到frm的id;
 		imgChange=imgChange.getElementsByClassName("score");
-	var tempStarNum = 0;	
-	if(stepNum > 20){
-		imgChange[0].src="images/starw.jpg";
-		imgChange[1].src="images/starw.jpg";
-		imgChange[2].src="images/starw.jpg";
-		tempStarNum = 0;
-	}else if(stepNum > 16){
+	var tempStarNum = 1;	
+	if(stepNum >18){
 		imgChange[1].src="images/starw.jpg";
 		imgChange[2].src="images/starw.jpg";
 		tempStarNum = 1;
@@ -257,7 +256,7 @@ function onclickhandle(obj){
 						list[idIntNum].firstChild.style.display="none";
 						//实现当两个图片不匹配时，隐藏图片;		
 						flg=0;//清除标签;
-					},200);
+					},50);
 								
 				}
 				showStars(obj,scoreNum,stepNum);//显示星星等级;
