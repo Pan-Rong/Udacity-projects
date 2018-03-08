@@ -1,6 +1,6 @@
 import React,{Component} from 'react'
 import { Link } from 'react-router-dom'
-import { Throttle } from 'react-throttle';
+import { Debounce } from 'react-throttle';
 import * as BooksAPI from './BooksAPI'
 import Books from './Books' //导入新建的book组件
 
@@ -34,13 +34,13 @@ class Search extends Component{
                 <div className="search-books-bar">
                     <Link to="/" className="close-search" >Close</Link>
                     <div className="serch-books-input-wrapper">
-                        <Throttle time="500" handler="onChange">
+                        <Debounce time="500" handler="onChange">
                             <input 
                                 type="text" 
                                 placeholder="Search by title or author"
                                 onChange = {(event)=>this.updateQuery(event.target.value)}
                             />
-                        </Throttle>
+                        </Debounce>
                     </div>
                 </div>
                 <div className="search-books-results">

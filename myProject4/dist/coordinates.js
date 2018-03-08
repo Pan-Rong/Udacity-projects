@@ -40,6 +40,6 @@ var coordinates =[{
     position:[118.853006,32.06200],
     address: "南京市玄武区紫金山南麓",
     englishName: "The Sun Yat-sen Mausoleum",
-    city: "北京"
+    city: "南京"
 }
 ];
