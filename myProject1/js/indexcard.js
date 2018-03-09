@@ -122,7 +122,7 @@ function showStars(obj,scoreNum,stepNum){
 		}
 	}
 }
-var fnameArray=new Array();//用于存放随机布局后的图片分布信息
+var fnameArray=[];//用于存放随机布局后的图片分布信息
 //设置初始化函数;
 function init(){
 	//初始化设置
@@ -229,7 +229,7 @@ function onclickhandle(obj){
 		flg+=idIntNum;
 
 			//判断是否选择了2张图片
- 		if(mouseclickNum%2==0){
+ 		if(mouseclickNum%2===0){
 
 		//判断是否两次点击的是同一图片,若是，提示操作有误需要重新选一张图片
 			if((flg-idIntNum)==idIntNum)
@@ -251,13 +251,20 @@ function onclickhandle(obj){
 					imgMatchArray[flg-idIntNum]=1;
 					flg=0;//清除标签;
 				}else{
+					var temp = document.getElementById("bgdiv");
+					var tempLis = temp.getElementsByTagName("li");
+					for(var temp of tempLis){
+						temp.style.pointerEvents = "none";
+					}
 					clearflg2 = setTimeout(function(){
 						list[flg-idIntNum].firstChild.style.display="none";
 						list[idIntNum].firstChild.style.display="none";
 						//实现当两个图片不匹配时，隐藏图片;		
 						flg=0;//清除标签;
-					},50);
-								
+						for(var temp of tempLis){
+							temp.style.pointerEvents = "auto";
+						}
+					},500);								
 				}
 				showStars(obj,scoreNum,stepNum);//显示星星等级;
 			}			
